@@ -1,0 +1,26 @@
+# IDE
+*.iml
+/.idea/
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+# Gradle
+.gradle
+/build
+*/build/
+/externalNativeBuild
+.cxx
+
+# Локальные свойства
+/local.properties
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Каптуры
+/captures
