@@ -35,6 +35,10 @@ cd <название_проекта>
 ```bash
 ./gradlew build
 ```
+#### Debug сборка
+```bash
+./gradlew assembleDebug
+```
 ## Запуск приложения
 - Через эмулятор:
 1. Откройте Device Manager.
