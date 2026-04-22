@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
 import com.kfc.onlinestore.ui.components.BottomNavigationBar
@@ -19,6 +18,7 @@ import com.kfc.onlinestore.ui.screen.HomeScreen
 import com.kfc.onlinestore.viewmodel.StoreViewModel
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: StoreViewModel = viewModel()
             val navController = rememberNavController()
-            val context = LocalContext.current
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
@@ -35,14 +34,11 @@ class MainActivity : ComponentActivity() {
             val selectedId by viewModel.selectedCategoryId.collectAsState()
 
             LaunchedEffect(Unit) {
-                viewModel.load(context)
+                viewModel.load(this@MainActivity)
             }
 
-            val allTags = remember(store) {
-                store?.items
-                    ?.flatMap { it.tags }
-                    ?.distinct()
-                    ?: emptyList()
+            val filterItems = remember(store) {
+                viewModel.getOrderedFilterItems()
             }
 
             MaterialTheme {
@@ -50,10 +46,9 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         if (currentRoute == "home") {
                             StoreTopBar(
-                                categories = store?.categories ?: emptyList(),
+                                filterItems = filterItems,
                                 selectedId = selectedId,
-                                onCategoryClick = { viewModel.setCategory(it) },
-                                filterTags = allTags
+                                onCategoryClick = { viewModel.setCategory(it) }
                             )
                         }
                     },
@@ -81,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(padding)
                     ) {
                         composable("home") {
-                            HomeScreen(viewModel = viewModel)
+                            HomeScreen(viewModel)
                         }
                         composable("cart") {
                             CartScreen()

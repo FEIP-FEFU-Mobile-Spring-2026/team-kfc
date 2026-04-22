@@ -14,22 +14,20 @@ fun HomeScreen(
 ) {
     val store by viewModel.store.collectAsState()
     val selectedId by viewModel.selectedCategoryId.collectAsState()
+    var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
     val products = store?.items ?: emptyList()
 
     val filtered = remember(products, selectedId) {
-        when {
-            selectedId == null -> products
-
-            products.any { it.categoryId == selectedId } ->
-                products.filter { it.categoryId == selectedId }
-
-            else ->
-                products.filter { it.tags.contains(selectedId) }
+        if (selectedId == null) {
+            products
+        } else {
+            val filteredList = products.filter {
+                it.categoryId == selectedId || it.tags.any { tag -> tag.equals(selectedId, true) }
+            }
+            filteredList
         }
     }
-
-    var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
     LazyColumn {
         items(filtered) { product ->

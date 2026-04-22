@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.kfc.onlinestore.model.Category
 import com.kfc.onlinestore.model.StoreResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,5 +32,26 @@ class StoreViewModel : ViewModel() {
 
             _store.value = Gson().fromJson(json, StoreResponse::class.java)
         }
+    }
+
+    fun getOrderedFilterItems(): List<Pair<String, String>> {
+        val storeData = _store.value ?: return emptyList()
+
+        val items = mutableListOf<Pair<String, String>>()
+
+        items.add("new" to "Новинки")
+
+        val categories = storeData.categories.map { it.id to it.name }
+        items.addAll(categories)
+
+        val otherTags = storeData.items
+            .flatMap { it.tags }
+            .distinct()
+            .filter { it.lowercase() != "new" }
+            .map { it to it }
+
+        items.addAll(otherTags)
+
+        return items.distinctBy { it.first }
     }
 }
