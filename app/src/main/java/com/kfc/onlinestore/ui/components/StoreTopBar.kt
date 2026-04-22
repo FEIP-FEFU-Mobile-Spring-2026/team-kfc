@@ -8,15 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kfc.onlinestore.model.Category
-import com.kfc.onlinestore.ui.theme.BlackText
-import com.kfc.onlinestore.ui.theme.PinkBack
-
+fun tagToDisplayName(tag: String): String {
+    return when (tag.lowercase()) {
+        "popular" -> "Популярное"
+        "new" -> "Новинки"
+        "sale" -> "Скидки"
+        else -> tag
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreTopBar(
     categories: List<Category>,
     selectedId: String?,
-    onCategoryClick: (String?) -> Unit
+    onCategoryClick: (String?) -> Unit,
+    filterTags: List<String>
 ) {
     Column {
         CenterAlignedTopAppBar(
@@ -35,11 +41,19 @@ fun StoreTopBar(
                 onClick = { onCategoryClick(null) }
             )
 
-            categories.forEach {
+            filterTags.forEach { tag ->
                 FilterButton(
-                    text = it.name,
-                    isSelected = selectedId == it.id,
-                    onClick = { onCategoryClick(it.id) }
+                    text = tagToDisplayName(tag),
+                    isSelected = selectedId == tag,
+                    onClick = { onCategoryClick(tag) }
+                )
+            }
+
+            categories.forEach { category ->
+                FilterButton(
+                    text = category.name,
+                    isSelected = selectedId == category.id,
+                    onClick = { onCategoryClick(category.id) }
                 )
             }
         }

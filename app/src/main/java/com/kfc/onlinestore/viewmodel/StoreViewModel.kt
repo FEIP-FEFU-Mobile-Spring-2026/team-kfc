@@ -17,7 +17,7 @@ class StoreViewModel : ViewModel() {
     private val _selectedCategoryId = MutableStateFlow<String?>(null)
     val selectedCategoryId: StateFlow<String?> = _selectedCategoryId
 
-    fun selectCategory(id: String?) {
+    fun setCategory(id: String?) {
         _selectedCategoryId.value = id
     }
 

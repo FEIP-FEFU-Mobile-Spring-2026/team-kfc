@@ -1,5 +1,6 @@
 package com.kfc.onlinestore.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -8,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kfc.onlinestore.model.Product
 import com.kfc.onlinestore.ui.theme.BlackText
@@ -15,7 +17,10 @@ import com.kfc.onlinestore.ui.theme.PinkBack
 import com.kfc.onlinestore.ui.theme.PinkPrice
 
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(
+    product: Product,
+    onClick: (Product) -> Unit
+) {
     val priceRub = product.priceInKopecks / 100
 
     Card(
@@ -26,17 +31,23 @@ fun ProductCard(product: Product) {
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column {
-            AsyncImage(
-                model = product.imageUrl,
-                contentDescription = product.name,
+
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(280.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                contentScale = ContentScale.Crop
-            )
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .clickable { onClick(product) }
+            ) {
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = product.name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
-            Column(Modifier.padding(16.dp)) {
+            Column(Modifier.padding(25.dp)) {
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleMedium
@@ -45,7 +56,8 @@ fun ProductCard(product: Product) {
                 Text(
                     text = "$priceRub ₽",
                     color = PinkPrice,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 20.sp
                 )
 
                 Text(
@@ -57,7 +69,7 @@ fun ProductCard(product: Product) {
                 Spacer(Modifier.height(12.dp))
 
                 Button(
-                    onClick = { },
+                    onClick = {},
                     colors = ButtonDefaults.buttonColors(
                         containerColor = PinkBack,
                         contentColor = BlackText

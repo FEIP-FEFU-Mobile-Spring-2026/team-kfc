@@ -1,17 +1,15 @@
 package com.kfc.onlinestore.ui.screen
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.kfc.onlinestore.viewmodel.StoreViewModel
+import com.kfc.onlinestore.model.Product
+import com.kfc.onlinestore.ui.components.ModalBottomSheetM3
 import com.kfc.onlinestore.ui.components.ProductCard
+import com.kfc.onlinestore.viewmodel.StoreViewModel
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
     viewModel: StoreViewModel
 ) {
     val store by viewModel.store.collectAsState()
@@ -19,16 +17,33 @@ fun HomeScreen(
 
     val products = store?.items ?: emptyList()
 
-    val filtered = if (selectedId == null) {
-        products
-    } else {
-        products.filter { it.categoryId == selectedId }
+    val filtered = remember(products, selectedId) {
+        when {
+            selectedId == null -> products
+
+            products.any { it.categoryId == selectedId } ->
+                products.filter { it.categoryId == selectedId }
+
+            else ->
+                products.filter { it.tags.contains(selectedId) }
+        }
     }
 
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        items(filtered, key = { it.id }) {
-            ProductCard(it)
+    var selectedProduct by remember { mutableStateOf<Product?>(null) }
+
+    LazyColumn {
+        items(filtered) { product ->
+            ProductCard(
+                product = product,
+                onClick = { selectedProduct = it }
+            )
         }
-        item { Spacer(Modifier.height(100.dp)) }
+    }
+
+    if (selectedProduct != null) {
+        ModalBottomSheetM3(
+            product = selectedProduct!!,
+            onDismiss = { selectedProduct = null }
+        )
     }
 }
