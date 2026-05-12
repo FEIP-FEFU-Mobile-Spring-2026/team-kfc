@@ -4,43 +4,86 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.kfc.onlinestore.ui.theme.OnlineStoreTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.*
+import com.kfc.onlinestore.ui.components.BottomNavigationBar
+import com.kfc.onlinestore.ui.components.StoreTopBar
+import com.kfc.onlinestore.ui.screen.CartScreen
+import com.kfc.onlinestore.ui.screen.HomeScreen
+import com.kfc.onlinestore.viewmodel.StoreViewModel
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-            OnlineStoreTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            val viewModel: StoreViewModel = viewModel()
+            val navController = rememberNavController()
+
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            val store by viewModel.store.collectAsState()
+            val selectedId by viewModel.selectedCategoryId.collectAsState()
+
+            LaunchedEffect(Unit) {
+                viewModel.load(this@MainActivity)
+            }
+
+            val filterItems = remember(store) {
+                viewModel.getOrderedFilterItems()
+            }
+
+            MaterialTheme {
+                Scaffold(
+                    topBar = {
+                        if (currentRoute == "home") {
+                            StoreTopBar(
+                                filterItems = filterItems,
+                                selectedId = selectedId,
+                                onCategoryClick = { viewModel.setCategory(it) }
+                            )
+                        }
+                    },
+                    bottomBar = {
+                        BottomNavigationBar(
+                            currentRoute = currentRoute,
+                            onCatalogClick = {
+                                if (currentRoute != "home") {
+                                    navController.navigate("home") {
+                                        popUpTo("home") { inclusive = true }
+                                    }
+                                }
+                            },
+                            onCartClick = {
+                                if (currentRoute != "cart") {
+                                    navController.navigate("cart")
+                                }
+                            }
+                        )
+                    }
+                ) { padding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = "home",
+                        modifier = Modifier.padding(padding)
+                    ) {
+                        composable("home") {
+                            HomeScreen(viewModel)
+                        }
+                        composable("cart") {
+                            CartScreen()
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    Text(
-        text = "Jaded",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    OnlineStoreTheme {
-        HomeScreen()
     }
 }
