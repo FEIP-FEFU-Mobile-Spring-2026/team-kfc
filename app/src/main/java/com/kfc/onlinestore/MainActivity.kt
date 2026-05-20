@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             val selectedId by viewModel.selectedCategoryId.collectAsState()
 
             LaunchedEffect(Unit) {
-                viewModel.load(this@MainActivity)
+                viewModel.loadCatalog()
             }
 
             val filterItems = remember(store) {
