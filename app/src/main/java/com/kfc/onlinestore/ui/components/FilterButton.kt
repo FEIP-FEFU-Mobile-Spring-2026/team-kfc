@@ -23,7 +23,7 @@ fun FilterButton(
             containerColor = if (isSelected) PinkBack else FilterButtonColor,
             contentColor = if (isSelected) FilterButtonColor else PinkBack
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .height(35.dp)
             .padding(horizontal = 4.dp),

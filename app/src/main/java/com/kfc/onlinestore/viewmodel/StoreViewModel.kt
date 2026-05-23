@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-// Состояния экрана для обработки загрузки и ошибок
 sealed interface StoreUiState {
     object Loading : StoreUiState
     object Success : StoreUiState
@@ -30,7 +29,6 @@ class StoreViewModel : ViewModel() {
     val selectedCategoryId: StateFlow<String?> = _selectedCategoryId.asStateFlow()
 
     init {
-        // Загружаем данные сразу при создании ViewModel, без привязки к Context
         loadCatalog()
     }
 
@@ -42,11 +40,9 @@ class StoreViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = StoreUiState.Loading
             try {
-                // Делаем сетевой запрос вместо чтения из ассетов
                 val response = RetrofitClient.apiService.getCatalog()
                 _store.value = response
 
-                // Опционально: устанавливаем первый фильтр по умолчанию ("new")
                 if (_selectedCategoryId.value == null) {
                     _selectedCategoryId.value = "new"
                 }
@@ -58,23 +54,19 @@ class StoreViewModel : ViewModel() {
         }
     }
 
-    // Возвращает отфильтрованный список товаров в зависимости от выбранного id (категории или тега)
     fun getFilteredProducts(): List<Product> {
         val storeData = _store.value ?: return emptyList()
         val selectedId = _selectedCategoryId.value ?: return storeData.items
 
         return when {
-            // Если выбран фильтр "Новинки", ищем товары с тегом "new"
             selectedId == "new" -> {
                 storeData.items.filter { product ->
                     product.tags.any { it.lowercase() == "new" }
                 }
             }
-            // Проверяем, совпадает ли selectedId с какой-либо категорией
             storeData.categories.any { it.id == selectedId } -> {
                 storeData.items.filter { it.categoryId == selectedId }
             }
-            // В противном случае считаем, что выбран кастомный тег
             else -> {
                 storeData.items.filter { product ->
                     product.tags.any { it == selectedId }
@@ -87,14 +79,11 @@ class StoreViewModel : ViewModel() {
         val storeData = _store.value ?: return emptyList()
         val items = mutableListOf<Pair<String, String>>()
 
-        // 1. Добавляем "Новинки"
         items.add("new" to "Новинки")
 
-        // 2. Добавляем категории из API
         val categories = storeData.categories.map { it.id to it.name }
         items.addAll(categories)
 
-        // 3. Добавляем остальные теги из товаров
         val otherTags = storeData.items
             .flatMap { it.tags }
             .distinct()
