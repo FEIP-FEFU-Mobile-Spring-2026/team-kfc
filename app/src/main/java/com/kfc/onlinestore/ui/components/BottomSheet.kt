@@ -19,17 +19,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -48,11 +45,6 @@ import com.kfc.onlinestore.ui.theme.GreyTag
 import com.kfc.onlinestore.ui.theme.MainIndigo
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.unit.sp
-import com.kfc.onlinestore.ui.theme.BlackText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,41 +125,36 @@ fun ModalBottomSheetM3(
 
                     Box {
                         IconButton(onClick = { expanded = !expanded }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = null)
+                            Icon(Icons.Default.Info, contentDescription = null)
                         }
 
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            modifier = Modifier.background(GreyTag.copy(alpha = 0.5f))
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text(product.material) },
-                                onClick = { expanded = false },
-                                colors = MenuDefaults.itemColors(
-                                    textColor = FilterButtonText
-                                )
-                            )
-                            DropdownMenuItem(
-                                text = { Text(product.weight) },
-                                onClick = { expanded = false },
-                                colors = MenuDefaults.itemColors(
-                                    textColor = FilterButtonText
-                                )
-                            )
-                            DropdownMenuItem(
-                                text = { Text(product.season) },
-                                onClick = { expanded = false },
-                                colors = MenuDefaults.itemColors(
-                                    textColor = FilterButtonText
-                                )
-                            )
-                            DropdownMenuItem(
-                                text = { Text(product.countryOfOrigin) },
-                                onClick = { expanded = false },
-                                colors = MenuDefaults.itemColors(
-                                    textColor = FilterButtonText
-                                )
+                        if (expanded) {
+                            AlertDialog(
+                                onDismissRequest = { expanded = false },
+                                title = { Text("Характеристики") },
+                                text = {
+                                    Column {
+                                        Text("Материал: ${product.material}")
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text("Вес: ${product.weight}")
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text("Сезон: ${product.season}")
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text("Страна происхождения: ${product.countryOfOrigin}")
+                                    }
+                                },
+                                confirmButton = {
+                                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                        Button(onClick = { expanded = false },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = FilterButtonText,
+                                                contentColor = GreyTag
+                                            ),
+                                        ) {
+                                            Text("ОК")
+                                        }
+                                    }
+                                }
                             )
                         }
                     }
