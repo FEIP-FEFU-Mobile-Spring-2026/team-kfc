@@ -1,23 +1,24 @@
 package com.kfc.onlinestore.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.kfc.onlinestore.ui.theme.ActionBrown
 import com.kfc.onlinestore.ui.theme.BlackText
-import com.kfc.onlinestore.ui.theme.PinkBack
-import com.kfc.onlinestore.ui.theme.PinkPrice
+import com.kfc.onlinestore.ui.theme.UnselectedLight
+import com.kfc.onlinestore.ui.theme.Indicator
+import com.kfc.onlinestore.ui.theme.UnselectedBottom
 
 @Composable
 fun BottomNavigationBar(
@@ -36,16 +37,17 @@ fun BottomNavigationBar(
             icon = {
                 Icon(
                     imageVector = Icons.Filled.Home,
-                    contentDescription = "Каталог"
+                    contentDescription = "Меню"
                 )
             },
-            label = { Text("Каталог") },
+            label = { Text("Меню") },
+            alwaysShowLabel = true,
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = PinkPrice,
-                selectedTextColor = PinkPrice,
-                unselectedIconColor = BlackText,
-                unselectedTextColor = BlackText,
-                indicatorColor = Color.Transparent
+                selectedIconColor = ActionBrown,
+                selectedTextColor = ActionBrown,
+                unselectedIconColor = UnselectedBottom,
+                unselectedTextColor = UnselectedBottom,
+                indicatorColor = Indicator
             )
         )
 
@@ -56,7 +58,10 @@ fun BottomNavigationBar(
                 if (cartBadgeCount > 0) {
                     BadgedBox(
                         badge = {
-                            Badge {
+                            Badge(
+                                containerColor = ActionBrown,
+                                contentColor = Color.White
+                            ) {
                                 Text(
                                     text = if (cartBadgeCount > 99) "99+" else cartBadgeCount.toString()
                                 )
@@ -76,43 +81,14 @@ fun BottomNavigationBar(
                 }
             },
             label = { Text("Корзина") },
+            alwaysShowLabel = true,
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = PinkPrice,
-                selectedTextColor = PinkPrice,
-                unselectedIconColor = BlackText,
-                unselectedTextColor = BlackText,
-                indicatorColor = Color.Transparent
+                selectedIconColor = ActionBrown,
+                selectedTextColor = ActionBrown,
+                unselectedIconColor = UnselectedBottom,
+                unselectedTextColor = UnselectedBottom,
+                indicatorColor = Indicator
             )
-        )
-    }
-}
-
-@Composable
-private fun NavigationItem(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val contentColor = if (isSelected) Color.Red else BlackText
-
-    Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .clickable { onClick() }
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = contentColor,
-            modifier = Modifier.size(26.dp)
-        )
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            color = contentColor
         )
     }
 }

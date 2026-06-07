@@ -86,7 +86,14 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(viewModel)
                         }
                         composable("cart") {
-                            CartScreen(viewModel)
+                            CartScreen(
+                                viewModel = viewModel,
+                                onGoHome = {
+                                    navController.navigate("home") {
+                                        popUpTo("home") { inclusive = true }
+                                    }
+                                }
+                            )
                         }
                     }
                 }

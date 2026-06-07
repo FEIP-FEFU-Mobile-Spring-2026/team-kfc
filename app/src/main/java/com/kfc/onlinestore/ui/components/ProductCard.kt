@@ -13,8 +13,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kfc.onlinestore.model.Product
 import com.kfc.onlinestore.ui.theme.BlackText
+import com.kfc.onlinestore.ui.theme.PriceBg
+import com.kfc.onlinestore.ui.theme.PriceText
 import com.kfc.onlinestore.ui.theme.PinkBack
-import com.kfc.onlinestore.ui.theme.PinkPrice
 
 @Composable
 fun ProductCard(
@@ -27,56 +28,54 @@ fun ProductCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(18.dp),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Column {
-            Box(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick(product) }
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            AsyncImage(
+                model = product.imageUrl,
+                contentDescription = product.name,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .clickable { onClick(product) }
-            ) {
-                AsyncImage(
-                    model = product.imageUrl,
-                    contentDescription = product.name,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            }
+                    .size(width = 78.dp, height = 96.dp)
+                    .clip(RoundedCornerShape(14.dp)),
+                contentScale = ContentScale.Crop
+            )
 
-            Column(Modifier.padding(25.dp)) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
                 Text(
                     text = product.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Text(
-                    text = "$priceRub ₽",
-                    color = PinkPrice,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 20.sp
+                    style = MaterialTheme.typography.titleMedium,
+                    color = BlackText,
+                    maxLines = 2
                 )
 
                 Text(
                     text = product.shortDescription,
                     style = MaterialTheme.typography.bodySmall,
-                    maxLines = 2
+                    color = BlackText,
+                    maxLines = 3,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
 
-                Spacer(Modifier.height(12.dp))
-
-                Button(
-                    onClick = { onClick(product) },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = PinkBack,
-                        contentColor = BlackText
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = PriceBg
                 ) {
-                    Text("Добавить в корзину")
+                    Text(
+                        text = "$priceRub ₽",
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = PriceText,
+                        fontSize = 13.sp
+                    )
                 }
             }
         }

@@ -1,41 +1,25 @@
 package com.kfc.onlinestore.ui.components
 
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kfc.onlinestore.model.Product
 import com.kfc.onlinestore.model.Size
+import com.kfc.onlinestore.ui.theme.ActionBrown
 import com.kfc.onlinestore.ui.theme.BlackText
 import com.kfc.onlinestore.ui.theme.GreyTag
-import com.kfc.onlinestore.ui.theme.PinkBack
-import com.kfc.onlinestore.ui.theme.PinkPrice
+import com.kfc.onlinestore.ui.theme.SelectedBrown
+import com.kfc.onlinestore.ui.theme.UnselectedLight
 import java.text.NumberFormat
 import java.util.Currency
 import java.util.Locale
@@ -64,66 +48,54 @@ fun ModalBottomSheetM3(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = 24.dp)
+                .padding(bottom = 20.dp)
         ) {
             AsyncImage(
                 model = product.imageUrl,
                 contentDescription = product.name,
                 modifier = Modifier
-                    .height(250.dp)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
+                    .fillMaxWidth()
+                    .height(240.dp),
+                contentScale = ContentScale.Fit
             )
 
-            Column(Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Spacer(Modifier.height(8.dp))
+
                 Text(
                     text = product.name,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    color = BlackText
                 )
 
                 Spacer(Modifier.height(8.dp))
 
                 Text(
                     text = product.longDescription,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                Text(
-                    text = formatRubles(product.priceInKopecks),
-                    color = PinkPrice,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 20.sp
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = BlackText
                 )
 
                 Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = "Размер",
-                    style = MaterialTheme.typography.titleSmall
-                )
-
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                        .padding(vertical = 8.dp),
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     product.sizes.forEach { size ->
-                        val isSelected = size.id == selectedSizeId
-
+                        val selected = size.id == selectedSizeId
                         Button(
                             onClick = { selectedSizeId = size.id },
+                            shape = RoundedCornerShape(50),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isSelected) BlackText else PinkBack,
-                                contentColor = if (isSelected) PinkBack else BlackText
+                                containerColor = if (selected) SelectedBrown else UnselectedLight,
+                                contentColor = if (selected) Color.White else BlackText,
                             ),
-                            shape = RoundedCornerShape(12.dp),
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            Text(size.name, fontSize = 14.sp)
+                            Text(size.name)
                         }
                     }
                 }
@@ -137,17 +109,17 @@ fun ModalBottomSheetM3(
                         onAddToCart(product, selectedSize)
                         onDismiss()
                     },
-                    enabled = product.sizes.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(52.dp),
+                        .height(48.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = PinkPrice,
-                        contentColor = BlackText
+                        containerColor = ActionBrown,
+                        contentColor = androidx.compose.ui.graphics.Color.White
                     ),
-                    shape = RoundedCornerShape(14.dp)
+                    enabled = product.sizes.isNotEmpty()
                 ) {
-                    Text("В корзину")
+                    Text("В корзину · ${formatRubles(product.priceInKopecks)}")
                 }
             }
         }

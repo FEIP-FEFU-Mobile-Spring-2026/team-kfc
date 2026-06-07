@@ -65,8 +65,8 @@ class StoreViewModel : ViewModel() {
 
     fun getOrderedFilterItems(): List<Pair<String, String>> {
         val storeData = _store.value ?: return emptyList()
-        val items = mutableListOf<Pair<String, String>>()
 
+        val items = mutableListOf<Pair<String, String>>()
         items.add("new" to "Новинки")
         items.addAll(storeData.categories.map { it.id to it.name })
 
@@ -166,8 +166,8 @@ class StoreViewModel : ViewModel() {
     private fun loadCartFromStorage() {
         val sharedPreferences = prefs ?: return
         val savedJson = sharedPreferences.getString(CART_PREFS_KEY, null)
-        val type = object : TypeToken<List<CartEntry>>() {}.type
 
+        val type = object : TypeToken<List<CartEntry>>() {}.type
         val loaded = if (savedJson.isNullOrBlank()) {
             emptyList()
         } else {
