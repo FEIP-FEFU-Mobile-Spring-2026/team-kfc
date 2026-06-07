@@ -31,7 +31,6 @@ fun ProductCard(
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,7 +68,7 @@ fun ProductCard(
                 Spacer(Modifier.height(12.dp))
 
                 Button(
-                    onClick = {},
+                    onClick = { onClick(product) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = PinkBack,
                         contentColor = BlackText

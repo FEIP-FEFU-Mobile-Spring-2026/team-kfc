@@ -1,80 +1,161 @@
 package com.kfc.onlinestore.ui.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kfc.onlinestore.model.Product
+import com.kfc.onlinestore.model.Size
 import com.kfc.onlinestore.ui.theme.BlackText
 import com.kfc.onlinestore.ui.theme.GreyTag
+import com.kfc.onlinestore.ui.theme.PinkBack
 import com.kfc.onlinestore.ui.theme.PinkPrice
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalBottomSheetM3(
     onDismiss: () -> Unit,
-    product: Product
+    product: Product,
+    onAddToCart: (Product, Size) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-    val priceRub = product.priceInKopecks / 100
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var selectedSizeId by remember(product.id) {
+        mutableStateOf(product.sizes.firstOrNull()?.id)
+    }
+
+    LaunchedEffect(product.id) {
+        selectedSizeId = product.sizes.firstOrNull()?.id
+    }
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState
     ) {
-        AsyncImage(
-            model = product.imageUrl,
-            contentDescription = product.name,
-            modifier = Modifier.height(250.dp).fillMaxWidth(),
-            contentScale = ContentScale.Crop
-        )
-        Text(
-            text = product.name,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-        )
-        Text(
-            text = product.longDescription,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-        )
-        Text(
-            text = priceRub.toString(),
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-            color = PinkPrice
-        )
-        LazyRow(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 24.dp)
         ) {
-            items(product.tags.size) { index ->
-                val item = product.tags[index]
+            AsyncImage(
+                model = product.imageUrl,
+                contentDescription = product.name,
+                modifier = Modifier
+                    .height(250.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+
+            Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = item,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(GreyTag, RoundedCornerShape(16.dp))
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    color = BlackText
+                    text = product.name,
+                    style = MaterialTheme.typography.titleLarge
                 )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = product.longDescription,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Text(
+                    text = formatRubles(product.priceInKopecks),
+                    color = PinkPrice,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 20.sp
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "Размер",
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    product.sizes.forEach { size ->
+                        val isSelected = size.id == selectedSizeId
+
+                        Button(
+                            onClick = { selectedSizeId = size.id },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isSelected) BlackText else PinkBack,
+                                contentColor = if (isSelected) PinkBack else BlackText
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(size.name, fontSize = 14.sp)
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        val selectedSize = product.sizes.firstOrNull { it.id == selectedSizeId }
+                            ?: return@Button
+                        onAddToCart(product, selectedSize)
+                        onDismiss()
+                    },
+                    enabled = product.sizes.isNotEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PinkPrice,
+                        contentColor = BlackText
+                    ),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Text("В корзину")
+                }
             }
         }
     }
+}
+
+private fun formatRubles(kopecks: Int): String {
+    val formatter = NumberFormat.getCurrencyInstance(Locale("ru", "RU"))
+    formatter.currency = Currency.getInstance("RUB")
+    return formatter.format(kopecks / 100.0)
 }

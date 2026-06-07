@@ -14,23 +14,22 @@ fun HomeScreen(
 ) {
     val store by viewModel.store.collectAsState()
     val selectedId by viewModel.selectedCategoryId.collectAsState()
+
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
     val products = store?.items ?: emptyList()
-
     val filtered = remember(products, selectedId) {
         if (selectedId == null) {
             products
         } else {
-            val filteredList = products.filter {
+            products.filter {
                 it.categoryId == selectedId || it.tags.any { tag -> tag.equals(selectedId, true) }
             }
-            filteredList
         }
     }
 
     LazyColumn {
-        items(filtered) { product ->
+        items(filtered, key = { it.id }) { product ->
             ProductCard(
                 product = product,
                 onClick = { selectedProduct = it }
@@ -38,10 +37,13 @@ fun HomeScreen(
         }
     }
 
-    if (selectedProduct != null) {
+    selectedProduct?.let { product ->
         ModalBottomSheetM3(
-            product = selectedProduct!!,
-            onDismiss = { selectedProduct = null }
+            product = product,
+            onDismiss = { selectedProduct = null },
+            onAddToCart = { addedProduct, size ->
+                viewModel.addToCart(addedProduct.id, size.id)
+            }
         )
     }
 }

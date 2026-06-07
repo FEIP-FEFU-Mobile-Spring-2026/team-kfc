@@ -7,10 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.kfc.onlinestore.ui.components.BottomNavigationBar
 import com.kfc.onlinestore.ui.components.StoreTopBar
 import com.kfc.onlinestore.ui.screen.CartScreen
@@ -18,7 +24,6 @@ import com.kfc.onlinestore.ui.screen.HomeScreen
 import com.kfc.onlinestore.viewmodel.StoreViewModel
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,6 +37,7 @@ class MainActivity : ComponentActivity() {
 
             val store by viewModel.store.collectAsState()
             val selectedId by viewModel.selectedCategoryId.collectAsState()
+            val cartBadgeCount by viewModel.cartBadgeCount.collectAsState()
 
             LaunchedEffect(Unit) {
                 viewModel.load(this@MainActivity)
@@ -55,6 +61,7 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomNavigationBar(
                             currentRoute = currentRoute,
+                            cartBadgeCount = cartBadgeCount,
                             onCatalogClick = {
                                 if (currentRoute != "home") {
                                     navController.navigate("home") {
@@ -79,7 +86,7 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(viewModel)
                         }
                         composable("cart") {
-                            CartScreen()
+                            CartScreen(viewModel)
                         }
                     }
                 }

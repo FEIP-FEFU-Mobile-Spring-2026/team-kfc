@@ -27,3 +27,15 @@ data class StoreResponse(
     val categories: List<Category>,
     val items: List<Product>
 )
+
+data class CartEntry(
+    val productId: String,
+    val sizeId: String,
+    val quantity: Int
+)
+
+data class CartLine(
+    val product: Product,
+    val size: Size,
+    val quantity: Int
+)

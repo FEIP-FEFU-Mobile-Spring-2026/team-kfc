@@ -22,6 +22,7 @@ import com.kfc.onlinestore.ui.theme.PinkPrice
 @Composable
 fun BottomNavigationBar(
     currentRoute: String?,
+    cartBadgeCount: Int,
     onCatalogClick: () -> Unit,
     onCartClick: () -> Unit
 ) {
@@ -52,10 +53,27 @@ fun BottomNavigationBar(
             selected = currentRoute == "cart",
             onClick = onCartClick,
             icon = {
-                Icon(
-                    imageVector = Icons.Filled.ShoppingCart,
-                    contentDescription = "Корзина"
-                )
+                if (cartBadgeCount > 0) {
+                    BadgedBox(
+                        badge = {
+                            Badge {
+                                Text(
+                                    text = if (cartBadgeCount > 99) "99+" else cartBadgeCount.toString()
+                                )
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ShoppingCart,
+                            contentDescription = "Корзина"
+                        )
+                    }
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
+                        contentDescription = "Корзина"
+                    )
+                }
             },
             label = { Text("Корзина") },
             colors = NavigationBarItemDefaults.colors(
