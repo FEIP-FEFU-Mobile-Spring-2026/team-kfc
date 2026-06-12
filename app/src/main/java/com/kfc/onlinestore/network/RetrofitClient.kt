@@ -1,35 +1,32 @@
 package com.kfc.onlinestore.network
 
-import com.kfc.onlinestore.model.CatalogApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://api.example.com/"
 
-    private fun getToken(): String {
-        return "Cmt7wdwFgDIi1_SRX8hlJIExs0jJKPr4axflLpExAxM"
-    }
+    private const val BASE_URL = "https://fefu2026spring.deploy.feip.dev/"
+
+    private fun getToken(): String = "Cmt7wdwFgDIi1_SRX8hlJIExs0jJKPr4axflLpExAxM"
 
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val originalRequest = chain.request()
-
                 val token = getToken()
 
-                val authenticatedRequest = originalRequest
-                    .newBuilder()
-                    .header("Authorization", "Bearer $token")
+                val request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
                     .build()
 
-                chain.proceed(authenticatedRequest)
+                chain.proceed(request)
             }
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .build()
     }
 
