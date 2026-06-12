@@ -184,13 +184,25 @@ fun CartScreen(
                     onClick = {
                         viewModel.clearCart()
                         showClearConfirm = false
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = FilterButtonText,
+                        contentColor = GreyTag
+                    ),
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     Text("Удалить")
                 }
             },
             dismissButton = {
-                Button(onClick = { showClearConfirm = false }) {
+                Button(
+                    onClick = { showClearConfirm = false },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = FilterButtonText,
+                        contentColor = GreyTag
+                    ),
+                    ) {
                     Text("Отмена")
                 }
             }
@@ -213,6 +225,7 @@ fun CartScreen(
                             containerColor = FilterButtonText,
                             contentColor = GreyTag
                         ),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Text("ОК")
                     }

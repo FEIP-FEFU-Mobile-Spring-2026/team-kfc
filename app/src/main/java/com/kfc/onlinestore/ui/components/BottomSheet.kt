@@ -151,6 +151,8 @@ fun ModalBottomSheetM3(
                                                 containerColor = FilterButtonText,
                                                 contentColor = GreyTag
                                             ),
+                                            shape = RoundedCornerShape(12.dp),
+
                                         ) {
                                             Text("ОК")
                                         }
