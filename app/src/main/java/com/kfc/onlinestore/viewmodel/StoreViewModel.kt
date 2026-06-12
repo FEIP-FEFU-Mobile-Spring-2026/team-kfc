@@ -1,11 +1,13 @@
 package com.kfc.onlinestore.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kfc.onlinestore.model.StoreResponse
 import com.kfc.onlinestore.model.Product
+import com.kfc.onlinestore.model.CartItem
 import com.kfc.onlinestore.network.RetrofitClient
-// Импортируйте ваш RetrofitClient или синглтон с apiService
+import com.kfc.onlinestore.repository.CartRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +19,7 @@ sealed interface StoreUiState {
     data class Error(val message: String) : StoreUiState
 }
 
-class StoreViewModel : ViewModel() {
+class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow<StoreUiState>(StoreUiState.Loading)
     val uiState: StateFlow<StoreUiState> = _uiState.asStateFlow()
@@ -28,8 +30,14 @@ class StoreViewModel : ViewModel() {
     private val _selectedCategoryId = MutableStateFlow<String?>(null)
     val selectedCategoryId: StateFlow<String?> = _selectedCategoryId.asStateFlow()
 
+    private val _cart = MutableStateFlow<List<CartItem>>(emptyList())
+    val cart: StateFlow<List<CartItem>> = _cart.asStateFlow()
+
+    private val cartRepository = CartRepository(application)
+
     init {
         loadCatalog()
+        loadCart()
     }
 
     fun setCategory(id: String?) {
@@ -92,5 +100,38 @@ class StoreViewModel : ViewModel() {
         items.addAll(otherTags)
 
         return items.distinctBy { it.first }
+    }
+
+    private fun loadCart() {
+        _cart.value = cartRepository.getCart()
+    }
+
+    fun addToCart(productId: String, sizeId: String) {
+        cartRepository.addToCart(productId, sizeId)
+        loadCart()
+    }
+
+    fun updateCartItemQuantity(productId: String, sizeId: String, quantity: Int) {
+        cartRepository.updateQuantity(productId, sizeId, quantity)
+        loadCart()
+    }
+
+    fun removeFromCart(productId: String, sizeId: String) {
+        cartRepository.removeFromCart(productId, sizeId)
+        loadCart()
+    }
+
+    fun clearCart() {
+        cartRepository.clearCart()
+        loadCart()
+    }
+
+    fun getCartItemCount(): Int = _cart.value.sumOf { it.quantity }
+
+    fun getCartWithProducts(): List<Pair<CartItem, Product?>> {
+        val products = _store.value?.items ?: emptyList()
+        return _cart.value.map { cartItem ->
+            cartItem to products.find { it.id == cartItem.productId }
+        }
     }
 }

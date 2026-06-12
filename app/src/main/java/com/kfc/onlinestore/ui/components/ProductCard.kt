@@ -21,7 +21,8 @@ import com.kfc.onlinestore.ui.theme.PinkBack
 @Composable
 fun ProductCard(
     product: Product,
-    onClick: (Product) -> Unit
+    onClick: (Product) -> Unit,
+    onAddToCartClick: (Product) -> Unit = {}
 ) {
     val priceRub = product.priceInKopecks / 100
 
@@ -71,7 +72,7 @@ fun ProductCard(
                 Spacer(Modifier.height(12.dp))
 
                 Button(
-                    onClick = {},
+                    onClick = { onAddToCartClick(product) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = PinkBack,
                         contentColor = BottomNavBarColor

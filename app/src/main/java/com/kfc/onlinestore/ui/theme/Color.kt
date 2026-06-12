@@ -18,4 +18,5 @@ val GreyTag = Color(0xFFC6CDD9)
 val FilterButtonColor = Color(0xFFC6CDD9)
 val FilterButtonText = Color(0xFF00033F)
 
+val ClothesCountColor = Color(0xFFFF0000)
 var BottomNavBarColor = Color(0xFFC6CDD9)

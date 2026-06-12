@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
 
             val store by viewModel.store.collectAsState()
             val selectedId by viewModel.selectedCategoryId.collectAsState()
+            val cart by viewModel.cart.collectAsState()
 
             LaunchedEffect(Unit) {
                 viewModel.loadCatalog()
@@ -44,6 +45,10 @@ class MainActivity : ComponentActivity() {
 
             val filterItems = remember(store) {
                 viewModel.getOrderedFilterItems()
+            }
+
+            val cartItemCount = remember(cart) {
+                cart.sumOf { it.quantity }
             }
 
             MaterialTheme {
@@ -71,7 +76,8 @@ class MainActivity : ComponentActivity() {
                                 if (currentRoute != "cart") {
                                     navController.navigate("cart")
                                 }
-                            }
+                            },
+                            cartItemCount = cartItemCount
                         )
                     }
                 ) { padding ->
@@ -84,7 +90,7 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(viewModel)
                         }
                         composable("cart") {
-                            CartScreen()
+                            CartScreen(viewModel)
                         }
                     }
                 }
