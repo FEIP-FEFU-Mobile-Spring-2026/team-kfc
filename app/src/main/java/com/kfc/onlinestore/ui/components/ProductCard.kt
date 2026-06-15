@@ -1,5 +1,6 @@
 package com.kfc.onlinestore.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,14 +8,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kfc.onlinestore.model.Product
-import com.kfc.onlinestore.ui.theme.BlackText
+import com.kfc.onlinestore.ui.theme.BottomNavBarColor
+import com.kfc.onlinestore.ui.theme.MainIndigo
 import com.kfc.onlinestore.ui.theme.PinkBack
-import com.kfc.onlinestore.ui.theme.PinkPrice
 
 @Composable
 fun ProductCard(
@@ -43,7 +45,7 @@ fun ProductCard(
                     model = product.imageUrl,
                     contentDescription = product.name,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
             }
 
@@ -55,7 +57,7 @@ fun ProductCard(
 
                 Text(
                     text = "$priceRub ₽",
-                    color = PinkPrice,
+                    color = MainIndigo,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 20.sp
                 )
@@ -72,7 +74,7 @@ fun ProductCard(
                     onClick = {},
                     colors = ButtonDefaults.buttonColors(
                         containerColor = PinkBack,
-                        contentColor = BlackText
+                        contentColor = BottomNavBarColor
                     ),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)

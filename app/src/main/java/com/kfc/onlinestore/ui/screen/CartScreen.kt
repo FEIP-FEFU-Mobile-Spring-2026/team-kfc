@@ -12,20 +12,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.kfc.onlinestore.ui.theme.PinkPrice
+import com.kfc.onlinestore.ui.theme.MainIndigo
 
 @Composable
 fun CartScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize()
-            .background(PinkPrice),
+            .background(MainIndigo),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Cart Screen!",
             fontSize = 40.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black
+            color = Color.White
         )
     }
 }

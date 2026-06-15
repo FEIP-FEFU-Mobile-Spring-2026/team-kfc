@@ -7,11 +7,15 @@ val Purple40 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 val Pink40 = Color(0xFFC42A57)
-val BlackText = Color(0xFF1D1D1B)
+val BlackText = Color(0xFF3494C7)
 val PurpleGrey40 = Color(0xFF0E0D0D)
 
-val PinkBack = Color(0xFFF59994)
+val PinkBack = Color(0xFF00033F)
 
-val PinkPrice = Color(0xFF405416)
+val MainIndigo = Color(0xFF00033F)
 
-val GreyTag = Color(0xFFD0CAD0)
+val GreyTag = Color(0xFFC6CDD9)
+val FilterButtonColor = Color(0xFFC6CDD9)
+val FilterButtonText = Color(0xFF00033F)
+
+var BottomNavBarColor = Color(0xFFC6CDD9)

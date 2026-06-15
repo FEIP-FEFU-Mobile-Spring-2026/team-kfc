@@ -16,9 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kfc.onlinestore.ui.theme.BlackText
+import com.kfc.onlinestore.ui.theme.BottomNavBarColor
+import com.kfc.onlinestore.ui.theme.FilterButtonColor
+import com.kfc.onlinestore.ui.theme.MainIndigo
 import com.kfc.onlinestore.ui.theme.PinkBack
-import com.kfc.onlinestore.ui.theme.PinkPrice
-
 @Composable
 fun BottomNavigationBar(
     currentRoute: String?,
@@ -40,11 +41,11 @@ fun BottomNavigationBar(
             },
             label = { Text("Каталог") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = PinkPrice,
-                selectedTextColor = PinkPrice,
-                unselectedIconColor = BlackText,
-                unselectedTextColor = BlackText,
-                indicatorColor = Color.Transparent
+                selectedIconColor = MainIndigo,
+                selectedTextColor = MainIndigo,
+                unselectedIconColor = MainIndigo,
+                unselectedTextColor = MainIndigo,
+                indicatorColor = FilterButtonColor
             )
         )
 
@@ -59,11 +60,11 @@ fun BottomNavigationBar(
             },
             label = { Text("Корзина") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = PinkPrice,
-                selectedTextColor = PinkPrice,
-                unselectedIconColor = BlackText,
-                unselectedTextColor = BlackText,
-                indicatorColor = Color.Transparent
+                selectedIconColor = MainIndigo,
+                selectedTextColor = MainIndigo,
+                unselectedIconColor = MainIndigo,
+                unselectedTextColor = MainIndigo,
+                indicatorColor = FilterButtonColor
             )
         )
     }
