@@ -1,5 +1,7 @@
 package com.kfc.onlinestore.model
 
+import retrofit2.http.GET
+
 data class Product(
     val id: String,
     val name: String,
@@ -27,3 +29,7 @@ data class StoreResponse(
     val categories: List<Category>,
     val items: List<Product>
 )
+interface CatalogApiService {
+    @GET("https://fefu2026spring.deploy.feip.dev/catalog")
+    suspend fun getCatalog(): StoreResponse
+}
