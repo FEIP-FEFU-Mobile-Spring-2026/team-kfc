@@ -1,9 +1,14 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
-
+val localProperties = Properties()
+localProperties.load(rootProject.file("local.properties").inputStream())
 android {
+    buildFeatures {
+        buildConfig = true
+    }
     namespace = "com.kfc.onlinestore"
     compileSdk {
         version = release(36) {
@@ -19,6 +24,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${localProperties.getProperty("API_KEY")}\""
+        )
     }
 
     buildTypes {
