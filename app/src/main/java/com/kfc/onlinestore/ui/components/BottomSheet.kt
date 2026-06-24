@@ -50,7 +50,8 @@ import androidx.compose.runtime.setValue
 @Composable
 fun ModalBottomSheetM3(
     onDismiss: () -> Unit,
-    product: Product
+    product: Product,
+    onAddToCart: (productId: String, sizeId: String) -> Unit = { _, _ -> }
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -150,6 +151,8 @@ fun ModalBottomSheetM3(
                                                 containerColor = FilterButtonText,
                                                 contentColor = GreyTag
                                             ),
+                                            shape = RoundedCornerShape(12.dp),
+
                                         ) {
                                             Text("ОК")
                                         }
@@ -218,7 +221,11 @@ fun ModalBottomSheetM3(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        val selectedSize = product.sizes[selectedSizeIndex]
+                        onAddToCart(product.id, selectedSize.id)
+                        onDismiss()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(

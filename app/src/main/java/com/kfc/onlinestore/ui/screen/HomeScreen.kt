@@ -80,7 +80,8 @@ fun HomeScreen(
                 items(filtered) { product ->
                     ProductCard(
                         product = product,
-                        onClick = { selectedProduct = it }
+                        onClick = { selectedProduct = it },
+                        onAddToCartClick = { selectedProduct = it }
                     )
                 }
             }
@@ -90,7 +91,10 @@ fun HomeScreen(
     if (selectedProduct != null) {
         ModalBottomSheetM3(
             product = selectedProduct!!,
-            onDismiss = { selectedProduct = null }
+            onDismiss = { selectedProduct = null },
+            onAddToCart = { productId, sizeId ->
+                viewModel.addToCart(productId, sizeId)
+            }
         )
     }
 }
