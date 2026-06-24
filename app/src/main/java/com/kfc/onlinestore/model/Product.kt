@@ -29,7 +29,3 @@ data class StoreResponse(
     val categories: List<Category>,
     val items: List<Product>
 )
-interface CatalogApiService {
-    @GET("https://fefu2026spring.deploy.feip.dev/catalog")
-    suspend fun getCatalog(): StoreResponse
-}
