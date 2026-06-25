@@ -41,10 +41,10 @@
 
 > Скриншоты основных экранов приложения
 
-| ![Каталог](screenshots/catalog.jpg) |
-| ![Карточка товара](screenshots/product.jpg) |
-| ![Корзина1](screenshots/cart1.jpg) |
-| ![Корзина2](screenshots/cart2.jpg) |
+| ![Каталог](screenshots/catalog.png) |
+| ![Карточка товара](screenshots/product.png) |
+| ![Корзина1](screenshots/cart1.png) |
+| ![Корзина2](screenshots/cart2.png) |
 
 ---
 
