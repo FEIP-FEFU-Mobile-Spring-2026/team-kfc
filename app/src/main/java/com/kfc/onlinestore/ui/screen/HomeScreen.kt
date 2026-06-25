@@ -65,16 +65,7 @@ fun HomeScreen(
         is StoreUiState.Success -> {
             val products = store?.items ?: emptyList()
 
-            val filtered = remember(products, selectedId) {
-                if (selectedId == null) {
-                    products
-                } else {
-                    val filteredList = products.filter {
-                        it.categoryId == selectedId || it.tags.any { tag -> tag.equals(selectedId, true) }
-                    }
-                    filteredList
-                }
-            }
+            val filtered = viewModel.getFilteredProducts()
 
             LazyColumn {
                 items(filtered) { product ->
