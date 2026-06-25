@@ -95,33 +95,3 @@ fun BottomNavigationBar(
         )
     }
 }
-
-@Composable
-private fun NavigationItem(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val contentColor = if (isSelected) FilterButtonColor else BlackText
-
-    Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .clickable { onClick() }
-            .padding(horizontal = 20.dp, vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = contentColor,
-            modifier = Modifier.size(26.dp)
-        )
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            color = contentColor
-        )
-    }
-}

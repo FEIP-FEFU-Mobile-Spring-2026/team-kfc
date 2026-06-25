@@ -1,6 +1,5 @@
 package com.kfc.onlinestore.model
 
-import retrofit2.http.GET
 
 data class Product(
     val id: String,

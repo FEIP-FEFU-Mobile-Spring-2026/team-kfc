@@ -20,11 +20,6 @@ object RetrofitClient {
 
                 chain.proceed(request)
             }
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-            )
             .build()
     }
 
