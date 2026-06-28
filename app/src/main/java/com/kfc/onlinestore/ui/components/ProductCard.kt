@@ -24,7 +24,7 @@ fun ProductCard(
     onClick: (Product) -> Unit,
     onAddToCartClick: (Product) -> Unit = {}
 ) {
-    val priceRub = product.priceInKopecks / 100
+    val priceRub = "%.2f ₽".format(product.priceInKopecks / 100.0)
 
     Card(
         modifier = Modifier

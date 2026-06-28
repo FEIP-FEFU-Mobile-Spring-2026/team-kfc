@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface CatalogApiService {
 
-    @GET("https://fefu2026spring.deploy.feip.dev/catalog")
+    @GET("catalog")
     suspend fun getCatalog(): StoreResponse
 }
